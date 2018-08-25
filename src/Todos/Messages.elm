@@ -13,3 +13,4 @@ type Msg
     | SaveTodo Todo
     | ShowTodos
     | ShowTodo TodoId
+    | CreateTodo
