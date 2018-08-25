@@ -1,0 +1,38 @@
+{
+  "name": "elm-study",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nf start",
+    "api": "node api.js",
+    "clean": "rm -rf build",
+    "build": "npm run clean && ENV=production webpack",
+    "watch": "webpack --watch",
+    "dev": "webpack-dev-server",
+    "serve": "http-server ./build -p 8080",
+    "elm": "elm"
+  },
+  "author": "ushiboy",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^9.1.0",
+    "bootstrap": "^4.1.3",
+    "css-loader": "^1.0.0",
+    "elm": "^0.18.0",
+    "elm-webpack-loader": "^4.5.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "foreman": "^3.0.1",
+    "http-server": "^0.11.1",
+    "json-server": "^0.14.0",
+    "node-sass": "^4.9.2",
+    "postcss-loader": "^2.1.6",
+    "precss": "^3.1.2",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.16.4",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  }
+}
