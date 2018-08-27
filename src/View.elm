@@ -19,13 +19,16 @@ page : Model -> Html Msg
 page model =
     case model.route of
         TodosRoute ->
-            Html.map TodosMsg (Todos.List.view model.todoModel)
+            Debug.log "todos route" Html.map TodosMsg (Todos.List.view model.todoModel)
+
+        NewTodoRoute _ ->
+            Debug.log "new todos route" Html.map TodosMsg (Todos.Edit.view model.todoModel)
 
         TodoRoute id ->
-            Html.map TodosMsg (Todos.Edit.view model.todoModel)
+            Debug.log "edit todos route" Html.map TodosMsg (Todos.Edit.view model.todoModel)
 
         NotFoundRoute ->
-            Html.map TodosMsg (Todos.List.view model.todoModel)
+            Debug.log "not found route" notFoundView
 
 
 notFoundView : Html msg

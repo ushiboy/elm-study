@@ -28,6 +28,7 @@ list todos =
             , tbody []
                 (List.map todoRow todos)
             ]
+        , button [ class "btn btn-primary", onClick CreateTodo ] [ text "Create Todo" ]
         ]
 
 

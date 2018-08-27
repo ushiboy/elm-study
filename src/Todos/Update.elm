@@ -55,3 +55,6 @@ update msg model hostname =
 
         ShowTodo id ->
             ( model, Navigation.newUrl ("#todos/" ++ (toString id)) )
+
+        CreateTodo ->
+            ( { model | draft = { id = -1, title = "", complete = False } }, Navigation.newUrl "#todos/new" )

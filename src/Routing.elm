@@ -7,6 +7,7 @@ import UrlParser exposing (..)
 
 type Route
     = TodosRoute
+    | NewTodoRoute String
     | TodoRoute TodoId
     | NotFoundRoute
 
@@ -16,6 +17,7 @@ matchers =
     oneOf
         [ map TodosRoute top
         , map TodoRoute (s "todos" </> int)
+        , map NewTodoRoute (s "todos" </> string)
         , map TodosRoute (s "todos")
         ]
 

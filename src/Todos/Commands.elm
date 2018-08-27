@@ -18,6 +18,9 @@ commands location route =
         TodoRoute id ->
             fetchOne location.hostname id
 
+        NewTodoRoute _ ->
+            Cmd.none
+
         NotFoundRoute ->
             Cmd.none
 
