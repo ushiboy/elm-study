@@ -28,6 +28,6 @@ todoForm todo =
                 , label [] [ text "Complete" ]
                 ]
             , button [ class "btn btn-primary" ] [ text "Save" ]
-            , button [ class "btn btn-link", onClick ShowTodos ] [ text "Cancel" ]
+            , button [ type_ "button", class "btn btn-link", onClick ShowTodos ] [ text "Cancel" ]
             ]
         ]
