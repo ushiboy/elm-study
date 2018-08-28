@@ -72,7 +72,11 @@ saveRequest hostname todo =
         { body = memberEncoded todo |> Http.jsonBody
         , expect = Http.expectJson memberDecoder
         , headers = []
-        , method = "PUT"
+        , method =
+            if todo.id > 0 then
+                "PUT"
+            else
+                "POST"
         , timeout = Nothing
         , url = saveUrl hostname todo.id
         , withCredentials = False
@@ -81,15 +85,17 @@ saveRequest hostname todo =
 
 saveUrl : String -> TodoId -> String
 saveUrl hostname id =
-    "http://" ++ hostname ++ ":4000/todos/" ++ (toString id)
+    if id > 0 then
+        "http://" ++ hostname ++ ":4000/todos/" ++ (toString id)
+    else
+        "http://" ++ hostname ++ ":4000/todos/"
 
 
 memberEncoded : Todo -> Encode.Value
 memberEncoded todo =
     let
         list =
-            [ ( "id", Encode.int todo.id )
-            , ( "title", Encode.string todo.title )
+            [ ( "title", Encode.string todo.title )
             , ( "complete", Encode.bool todo.complete )
             ]
     in
