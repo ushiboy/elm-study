@@ -101,3 +101,21 @@ memberEncoded todo =
     in
         list
             |> Encode.object
+
+
+removeRequest : String -> Todo -> Http.Request Todo
+removeRequest hostname todo =
+    Http.request
+        { body = Http.emptyBody
+        , expect = Http.expectJson memberDecoder
+        , headers = []
+        , method = "DELETE"
+        , timeout = Nothing
+        , url = removeUrl hostname todo.id
+        , withCredentials = False
+        }
+
+
+removeUrl : String -> TodoId -> String
+removeUrl hostname id =
+    "http://" ++ hostname ++ ":4000/todos/" ++ (toString id)
