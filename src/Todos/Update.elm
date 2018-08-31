@@ -3,7 +3,7 @@ module Todos.Update exposing (..)
 import Navigation
 import Todos.Messages exposing (Msg(..))
 import Todos.Models exposing (Todo, TodoId, Model)
-import Todos.Commands exposing (saveTodo)
+import Todos.Commands exposing (saveTodo, removeTodo)
 
 
 update : Msg -> Model -> String -> ( Model, Cmd Msg )
@@ -49,6 +49,9 @@ update msg model hostname =
 
         SaveTodo todo ->
             ( model, (saveTodo hostname todo) )
+
+        RemoveTodo todo ->
+            ( model, (removeTodo hostname todo) )
 
         ShowTodos ->
             ( model, Navigation.newUrl "#todos" )

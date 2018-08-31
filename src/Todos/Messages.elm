@@ -11,6 +11,7 @@ type Msg
     | UpdateTitle String
     | ToggleComplete
     | SaveTodo Todo
+    | RemoveTodo Todo
     | ShowTodos
     | ShowTodo TodoId
     | CreateTodo

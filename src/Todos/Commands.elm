@@ -103,6 +103,12 @@ memberEncoded todo =
             |> Encode.object
 
 
+removeTodo : String -> Todo -> Cmd Msg
+removeTodo hostname todo =
+    removeRequest hostname todo
+        |> Http.send OnFetchOne
+
+
 removeRequest : String -> Todo -> Http.Request Todo
 removeRequest hostname todo =
     Http.request
