@@ -63,7 +63,7 @@ oneTodoUrl hostname id =
 saveTodo : String -> Todo -> Cmd Msg
 saveTodo hostname todo =
     saveRequest hostname todo
-        |> Http.send OnFetchOne
+        |> Http.send OnSave
 
 
 saveRequest : String -> Todo -> Http.Request Todo
@@ -106,14 +106,14 @@ memberEncoded todo =
 removeTodo : String -> Todo -> Cmd Msg
 removeTodo hostname todo =
     removeRequest hostname todo
-        |> Http.send OnFetchOne
+        |> Http.send OnRemove
 
 
 removeRequest : String -> Todo -> Http.Request Todo
 removeRequest hostname todo =
     Http.request
         { body = Http.emptyBody
-        , expect = Http.expectJson memberDecoder
+        , expect = Http.expectStringResponse << always <| Ok todo
         , headers = []
         , method = "DELETE"
         , timeout = Nothing
