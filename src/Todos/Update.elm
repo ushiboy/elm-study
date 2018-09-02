@@ -3,7 +3,7 @@ module Todos.Update exposing (..)
 import Navigation
 import Todos.Messages exposing (Msg(..))
 import Todos.Models exposing (Todo, TodoId, Model)
-import Todos.Commands exposing (saveTodo)
+import Todos.Commands exposing (saveTodo, removeTodo)
 
 
 update : Msg -> Model -> String -> ( Model, Cmd Msg )
@@ -22,10 +22,16 @@ update msg model hostname =
             ( model, Cmd.none )
 
         OnSave (Ok savedTodo) ->
-            ( { model | draft = savedTodo }, Cmd.none )
+            ( { model | draft = savedTodo }, redirectTodos )
 
         OnSave (Err error) ->
             ( model, Cmd.none )
+
+        OnRemove (Ok savedTodo) ->
+            Debug.log "onremove ok" ( { model | draft = savedTodo }, redirectTodos )
+
+        OnRemove (Err error) ->
+            Debug.log "onremove error" ( model, Cmd.none )
 
         UpdateTitle title ->
             let
@@ -50,11 +56,19 @@ update msg model hostname =
         SaveTodo todo ->
             ( model, (saveTodo hostname todo) )
 
+        RemoveTodo todo ->
+            ( model, (removeTodo hostname todo) )
+
         ShowTodos ->
-            ( model, Navigation.newUrl "#todos" )
+            ( model, redirectTodos )
 
         ShowTodo id ->
             ( model, Navigation.newUrl ("#todos/" ++ (toString id)) )
 
         CreateTodo ->
             ( { model | draft = { id = -1, title = "", complete = False } }, Navigation.newUrl "#todos/new" )
+
+
+redirectTodos : Cmd Msg
+redirectTodos =
+    Navigation.newUrl "#todos"

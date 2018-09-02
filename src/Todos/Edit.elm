@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, onWithOptions)
 import Todos.Models exposing (Model, Todo)
-import Todos.Messages exposing (Msg(UpdateTitle, ToggleComplete, SaveTodo, ShowTodos))
+import Todos.Messages exposing (Msg(UpdateTitle, ToggleComplete, SaveTodo, RemoveTodo, ShowTodos))
 import Json.Decode as Decode
 
 
@@ -27,7 +27,16 @@ todoForm todo =
                 [ input [ class "form-check-input", type_ "checkbox", checked todo.complete, onClick ToggleComplete ] []
                 , label [] [ text "Complete" ]
                 ]
+            , todoRemoveButton todo
             , button [ class "btn btn-primary" ] [ text "Save" ]
             , button [ type_ "button", class "btn btn-link", onClick ShowTodos ] [ text "Cancel" ]
             ]
         ]
+
+
+todoRemoveButton : Todo -> Html Msg
+todoRemoveButton todo =
+    if todo.id > 0 then
+        button [ type_ "button", class "btn btn-danger", onClick (RemoveTodo todo) ] [ text "Remove" ]
+    else
+        span [] []
