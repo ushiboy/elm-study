@@ -1,10 +1,13 @@
-module Update exposing (..)
+module Update exposing (update)
 
+import Browser
+import Browser.Navigation as Nav
 import Messages exposing (Msg(..))
 import Models exposing (..)
-import Todos.Update
-import Routing exposing (parseLocation)
+import Routing exposing (parseUrl)
 import Todos.Commands exposing (commands)
+import Todos.Update
+import Url
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -13,13 +16,21 @@ update msg model =
         TodosMsg subMsg ->
             let
                 ( updateTodoModel, cmd ) =
-                    Todos.Update.update subMsg model.todoModel model.hostname
+                    Todos.Update.update subMsg model.todoModel model.hostname model.key
             in
-                ( { model | todoModel = updateTodoModel }, Cmd.map TodosMsg cmd )
+            ( { model | todoModel = updateTodoModel }, Cmd.map TodosMsg cmd )
 
-        OnLocationChange location ->
+        LinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Nav.pushUrl model.key (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
+
+        UrlChanged url ->
             let
-                newRoute =
-                    parseLocation location
+                route =
+                    parseUrl url
             in
-                ( { model | route = newRoute }, Cmd.map TodosMsg (commands location newRoute) )
+            ( { model | route = route }, Cmd.map TodosMsg (commands url route) )

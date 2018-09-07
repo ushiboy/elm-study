@@ -1,7 +1,7 @@
-module Todos.Messages exposing (..)
+module Todos.Messages exposing (Msg(..))
 
 import Http
-import Todos.Models exposing (TodoId, Todo)
+import Todos.Models exposing (Todo, TodoId)
 
 
 type Msg

@@ -1,34 +1,55 @@
-module View exposing (..)
+module View exposing (notFoundView, page, view)
 
-import Html exposing (Html, div, text)
-import Models exposing (Model)
+import Browser
+import Html exposing (Html, a, button, div, li, nav, span, text, ul)
+import Html.Attributes exposing (..)
 import Messages exposing (Msg(..))
-import Todos.List
-import Todos.Edit
-import Todos.Models exposing (TodoId)
+import Models exposing (Model)
 import Routing exposing (Route(..))
+import Todos.Edit
+import Todos.List
+import Todos.Models exposing (TodoId)
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
-    div []
-        [ page model ]
+    { title = "Elm SPA Todo"
+    , body =
+        [ nav [ class "navbar navbar-expand-lg navbar-light bg-light" ]
+            [ a [ class "navbar-brand" ] [ text "Elm Study" ]
+            , button [ class "navbar-toggler", type_ "button" ]
+                [ span [ class "navbar-toggler-icon" ] []
+                ]
+            , div [ class "collapse navbar-collapse" ]
+                [ ul [ class "navbar-nav mr-auto" ]
+                    [ li [ class "nav-item active" ]
+                        [ a [ class "nav-link", href "/todos" ]
+                            [ text "Home"
+                            , span [ class "sr-only" ] [ text "(current)" ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        , div [] [ page model ]
+        ]
+    }
 
 
 page : Model -> Html Msg
 page model =
     case model.route of
         TodosRoute ->
-            Debug.log "todos route" Html.map TodosMsg (Todos.List.view model.todoModel)
+            Html.map TodosMsg (Todos.List.view model.todoModel)
 
         NewTodoRoute _ ->
-            Debug.log "new todos route" Html.map TodosMsg (Todos.Edit.view model.todoModel)
+            Html.map TodosMsg (Todos.Edit.view model.todoModel)
 
         TodoRoute id ->
-            Debug.log "edit todos route" Html.map TodosMsg (Todos.Edit.view model.todoModel)
+            Html.map TodosMsg (Todos.Edit.view model.todoModel)
 
         NotFoundRoute ->
-            Debug.log "not found route" notFoundView
+            notFoundView
 
 
 notFoundView : Html msg

@@ -1,10 +1,10 @@
-module Todos.List exposing (..)
+module Todos.List exposing (list, todoRow, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Todos.Models exposing (Todo, Model)
 import Todos.Messages exposing (..)
+import Todos.Models exposing (Model, Todo)
 
 
 view : Model -> Html Msg
@@ -35,7 +35,7 @@ list todos =
 todoRow : Todo -> Html Msg
 todoRow todo =
     tr []
-        [ td [] [ text (toString todo.id) ]
+        [ td [] [ text (String.fromInt todo.id) ]
         , td [] [ text todo.title ]
         , td []
             [ button [ class "btn btn-primary btn-sm", onClick (ShowTodo todo.id) ] [ text "Edit" ]

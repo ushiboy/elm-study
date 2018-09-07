@@ -1,28 +1,32 @@
 module Main exposing (main)
 
+import Browser
+import Browser.Navigation as Nav
 import Messages exposing (..)
 import Models exposing (Model, initialModel)
-import View exposing (view)
-import Update exposing (update)
 import Routing
-import Navigation exposing (Location)
 import Todos.Commands exposing (commands)
+import Update exposing (update)
+import Url
+import View exposing (view)
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
+init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url key =
     let
         currentRoute =
-            Routing.parseLocation location
+            Routing.parseUrl url
     in
-        ( initialModel currentRoute location, Cmd.map TodosMsg (commands location currentRoute) )
+    ( initialModel currentRoute url key, Cmd.map TodosMsg (commands url currentRoute) )
 
 
-main : Program Never Model Msg
+main : Program () Model Msg
 main =
-    Navigation.program OnLocationChange
+    Browser.application
         { init = init
         , view = view
         , update = update
-        , subscriptions = (\s -> Sub.none)
+        , subscriptions = \s -> Sub.none
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }
