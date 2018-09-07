@@ -1,22 +1,22 @@
-module Todos.Commands exposing (..)
+module Todos.Commands exposing (collectionDecoder, commands, fetchAll, fetchAllUrl, fetchOne, memberDecoder, memberEncoded, oneTodoUrl, removeRequest, removeTodo, removeUrl, saveRequest, saveTodo, saveUrl)
 
 import Http
 import Json.Decode as Decode exposing (field)
 import Json.Encode as Encode
-import Todos.Models exposing (TodoId, Todo)
-import Todos.Messages exposing (Msg(..))
 import Routing exposing (Route(..))
-import Navigation exposing (Location)
+import Todos.Messages exposing (Msg(..))
+import Todos.Models exposing (Todo, TodoId)
+import Url
 
 
-commands : Location -> Route -> Cmd Msg
-commands location route =
+commands : Url.Url -> Route -> Cmd Msg
+commands url route =
     case route of
         TodosRoute ->
-            fetchAll location.hostname
+            fetchAll url.host
 
         TodoRoute id ->
-            fetchOne location.hostname id
+            fetchOne url.host id
 
         NewTodoRoute _ ->
             Cmd.none
@@ -57,7 +57,7 @@ fetchOne hostname id =
 
 oneTodoUrl : String -> TodoId -> String
 oneTodoUrl hostname id =
-    "http://" ++ hostname ++ ":4000/todos/" ++ (toString id)
+    "http://" ++ hostname ++ ":4000/todos/" ++ String.fromInt id
 
 
 saveTodo : String -> Todo -> Cmd Msg
@@ -75,6 +75,7 @@ saveRequest hostname todo =
         , method =
             if todo.id > 0 then
                 "PUT"
+
             else
                 "POST"
         , timeout = Nothing
@@ -86,7 +87,8 @@ saveRequest hostname todo =
 saveUrl : String -> TodoId -> String
 saveUrl hostname id =
     if id > 0 then
-        "http://" ++ hostname ++ ":4000/todos/" ++ (toString id)
+        "http://" ++ hostname ++ ":4000/todos/" ++ String.fromInt id
+
     else
         "http://" ++ hostname ++ ":4000/todos/"
 
@@ -99,8 +101,8 @@ memberEncoded todo =
             , ( "complete", Encode.bool todo.complete )
             ]
     in
-        list
-            |> Encode.object
+    list
+        |> Encode.object
 
 
 removeTodo : String -> Todo -> Cmd Msg
@@ -124,4 +126,4 @@ removeRequest hostname todo =
 
 removeUrl : String -> TodoId -> String
 removeUrl hostname id =
-    "http://" ++ hostname ++ ":4000/todos/" ++ (toString id)
+    "http://" ++ hostname ++ ":4000/todos/" ++ String.fromInt id

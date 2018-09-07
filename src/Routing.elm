@@ -1,8 +1,8 @@
-module Routing exposing (..)
+module Routing exposing (Route(..), matchers, parseUrl)
 
-import Navigation exposing (Location)
 import Todos.Models exposing (TodoId)
-import UrlParser exposing (..)
+import Url
+import Url.Parser exposing ((</>), Parser, int, map, oneOf, parse, s, string, top)
 
 
 type Route
@@ -22,11 +22,6 @@ matchers =
         ]
 
 
-parseLocation : Location -> Route
-parseLocation location =
-    case (parseHash matchers location) of
-        Just route ->
-            route
-
-        Nothing ->
-            NotFoundRoute
+parseUrl : Url.Url -> Route
+parseUrl url =
+    Maybe.withDefault NotFoundRoute (parse matchers url)

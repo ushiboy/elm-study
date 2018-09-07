@@ -1,4 +1,4 @@
-module Todos.Models exposing (..)
+module Todos.Models exposing (Model, Todo, TodoId, initialModel)
 
 
 type alias Model =

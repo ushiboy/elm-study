@@ -1,11 +1,21 @@
-module Todos.Edit exposing (..)
+module Todos.Edit exposing (todoForm, todoRemoveButton, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick, onWithOptions)
-import Todos.Models exposing (Model, Todo)
-import Todos.Messages exposing (Msg(UpdateTitle, ToggleComplete, SaveTodo, RemoveTodo, ShowTodos))
+import Html.Events exposing (onClick, onInput, preventDefaultOn)
 import Json.Decode as Decode
+import Todos.Messages exposing (Msg(..))
+import Todos.Models exposing (Model, Todo)
+
+
+onSubmit : msg -> Attribute msg
+onSubmit msg =
+    preventDefaultOn "submit" (Decode.map alwaysPreventDefault (Decode.succeed msg))
+
+
+alwaysPreventDefault : msg -> ( msg, Bool )
+alwaysPreventDefault msg =
+    ( msg, True )
 
 
 view : Model -> Html Msg
@@ -18,7 +28,7 @@ view model =
 todoForm : Todo -> Html Msg
 todoForm todo =
     div [ class "row" ]
-        [ Html.form [ onWithOptions "submit" { preventDefault = True, stopPropagation = False } (Decode.succeed (SaveTodo todo)) ]
+        [ Html.form [ onSubmit (SaveTodo todo) ]
             [ div [ class "form-group" ]
                 [ label [] [ text "Title" ]
                 , input [ class "form-control", type_ "text", value todo.title, onInput UpdateTitle ] []
@@ -38,5 +48,6 @@ todoRemoveButton : Todo -> Html Msg
 todoRemoveButton todo =
     if todo.id > 0 then
         button [ type_ "button", class "btn btn-danger", onClick (RemoveTodo todo) ] [ text "Remove" ]
+
     else
         span [] []

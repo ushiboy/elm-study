@@ -1,9 +1,11 @@
-module Messages exposing (..)
+module Messages exposing (Msg(..))
 
-import Navigation exposing (Location)
+import Browser
 import Todos.Messages
+import Url
 
 
 type Msg
     = TodosMsg Todos.Messages.Msg
-    | OnLocationChange Location
+    | LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url

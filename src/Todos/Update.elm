@@ -1,13 +1,13 @@
-module Todos.Update exposing (..)
+module Todos.Update exposing (redirectTodos, update)
 
-import Navigation
+import Browser.Navigation as Nav
+import Todos.Commands exposing (removeTodo, saveTodo)
 import Todos.Messages exposing (Msg(..))
-import Todos.Models exposing (Todo, TodoId, Model)
-import Todos.Commands exposing (saveTodo, removeTodo)
+import Todos.Models exposing (Model, Todo, TodoId)
 
 
-update : Msg -> Model -> String -> ( Model, Cmd Msg )
-update msg model hostname =
+update : Msg -> Model -> String -> Nav.Key -> ( Model, Cmd Msg )
+update msg model hostname key =
     case msg of
         OnFetchAll (Ok newTodos) ->
             ( { model | todos = newTodos }, Cmd.none )
@@ -22,16 +22,16 @@ update msg model hostname =
             ( model, Cmd.none )
 
         OnSave (Ok savedTodo) ->
-            ( { model | draft = savedTodo }, redirectTodos )
+            ( { model | draft = savedTodo }, redirectTodos key )
 
         OnSave (Err error) ->
             ( model, Cmd.none )
 
         OnRemove (Ok savedTodo) ->
-            Debug.log "onremove ok" ( { model | draft = savedTodo }, redirectTodos )
+            ( { model | draft = savedTodo }, redirectTodos key )
 
         OnRemove (Err error) ->
-            Debug.log "onremove error" ( model, Cmd.none )
+            ( model, Cmd.none )
 
         UpdateTitle title ->
             let
@@ -41,7 +41,7 @@ update msg model hostname =
                 newDraft =
                     { oldDraft | title = title }
             in
-                ( { model | draft = newDraft }, Cmd.none )
+            ( { model | draft = newDraft }, Cmd.none )
 
         ToggleComplete ->
             let
@@ -51,24 +51,24 @@ update msg model hostname =
                 newDraft =
                     { oldDraft | complete = not oldDraft.complete }
             in
-                ( { model | draft = newDraft }, Cmd.none )
+            ( { model | draft = newDraft }, Cmd.none )
 
         SaveTodo todo ->
-            ( model, (saveTodo hostname todo) )
+            ( model, saveTodo hostname todo )
 
         RemoveTodo todo ->
-            ( model, (removeTodo hostname todo) )
+            ( model, removeTodo hostname todo )
 
         ShowTodos ->
-            ( model, redirectTodos )
+            ( model, redirectTodos key )
 
         ShowTodo id ->
-            ( model, Navigation.newUrl ("#todos/" ++ (toString id)) )
+            ( model, Nav.pushUrl key ("/todos/" ++ String.fromInt id) )
 
         CreateTodo ->
-            ( { model | draft = { id = -1, title = "", complete = False } }, Navigation.newUrl "#todos/new" )
+            ( { model | draft = { id = -1, title = "", complete = False } }, Nav.pushUrl key "/todos/new" )
 
 
-redirectTodos : Cmd Msg
-redirectTodos =
-    Navigation.newUrl "#todos"
+redirectTodos : Nav.Key -> Cmd Msg
+redirectTodos key =
+    Nav.pushUrl key "/todos"
